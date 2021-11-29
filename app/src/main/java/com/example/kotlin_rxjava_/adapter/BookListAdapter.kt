@@ -11,7 +11,11 @@ import com.example.kotlin_rxjava_.R
 import com.example.kotlin_rxjava_.model.Book
 
 class BookListAdapter: RecyclerView.Adapter<BookListAdapter.MyViewHolder>() {
-    var bookList = ArrayList<Book>()
+    private var bookList = ArrayList<Book>()
+
+    fun setBookList(bookList: ArrayList<Book>) {
+        this.bookList = bookList
+    }
 
     override fun onCreateViewHolder(
         parent: ViewGroup,

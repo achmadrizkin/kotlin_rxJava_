@@ -16,9 +16,10 @@ import com.example.kotlin_rxjava_.R
 import com.example.kotlin_rxjava_.adapter.BookListAdapter
 import com.example.kotlin_rxjava_.model.BookList
 import com.example.kotlin_rxjava_.view_model.MainActivityViewModel
+import dagger.hilt.android.AndroidEntryPoint
 
+@AndroidEntryPoint
 class MainActivity : AppCompatActivity() {
-    lateinit var viewModel: MainActivityViewModel
     lateinit var bookListAdapter: BookListAdapter
 
     lateinit var recyclerView : RecyclerView
@@ -35,7 +36,7 @@ class MainActivity : AppCompatActivity() {
         initRecyclerView()
     }
 
-    private fun initRecyclerView() {
+    fun initRecyclerView() {
         recyclerView.apply {
             layoutManager = LinearLayoutManager(this@MainActivity)
             val decoration  = DividerItemDecoration(applicationContext, StaggeredGridLayoutManager.VERTICAL)
@@ -47,7 +48,7 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
-    private fun initSearchBook() {
+    fun initSearchBook() {
         inputBookName.addTextChangedListener(object: TextWatcher {
             override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
             }
@@ -62,16 +63,16 @@ class MainActivity : AppCompatActivity() {
         })
     }
 
-    private fun loadApiData(input: String) {
-        viewModel = ViewModelProvider(this).get(MainActivityViewModel::class.java)
-        viewModel.getBookListObservable().observe(this, Observer<BookList> {
+    fun loadApiData(input: String) {
+        val viewModel = ViewModelProvider(this).get(MainActivityViewModel::class.java)
+        viewModel.getBookListObservable().observe(this, Observer {
             if (it != null) {
-                bookListAdapter.bookList = it.data
+                bookListAdapter.setBookList(it.data)
                 bookListAdapter.notifyDataSetChanged()
             } else {
                 Toast.makeText(this, "Error in getting data", Toast.LENGTH_SHORT).show()
             }
         })
-        viewModel.getBookFromApiCall(input)
+        viewModel.getBookListOfData(input)
     }
 }
